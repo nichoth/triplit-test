@@ -1,34 +1,53 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
-import TriplitDB, { Schema as S, IndexedDBStorage } from '@triplit/db'
+import { TriplitClient } from '@triplit/client'
+import Debug from '@nichoth/debug'
 
-const todoSchema = S.Schema({
-    todos: {
-        text: S.String(),
-        created_at: S.String(),
-        complete: S.Boolean(),
-        tags: S.Set(S.String())
-    }
-})
+const debug = Debug()
+
+type Todo = { text:string, completed:boolean }
 
 /**
- * Setup any state
+ * Setup state
  *   - routes
+ *   - create DB instance
  */
-export function State ():{
+export async function State ():Promise<{
     route:Signal<string>;
     count:Signal<number>;
     _setRoute:(path:string)=>void;
-} {  // eslint-disable-line indent
+    _client:InstanceType<typeof TriplitClient>
+}> {  // eslint-disable-line indent
     const onRoute = Route()
+    const client = new TriplitClient()
 
-    const db = new TriplitDB({
-        schema: todoSchema,
-        source: new IndexedDBStorage('db-name'),
+    // Define a query
+    const completedTodosQuery = client
+        .query('todos')
+        .where('completed', '=', true)
+        .build()
+
+    // Insert data
+    await client.insert('todos', { text: 'Buy milk', completed: true })
+    await client.insert('todos', { text: 'Buy eggs', completed: false })
+    await client.insert('todos', { text: 'Buy bread', completed: true })
+
+    // Execute the query
+    const completedTodos = await client.fetch(completedTodosQuery)
+    debug('completed todos', completedTodos)
+
+    // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
+
+    // Subscribe to query result updates
+    client.subscribe(completedTodosQuery, (data) => {
+        // do something with data
+        debug('in subscription', data)
     })
 
     const state = {
         _setRoute: onRoute.setRoute.bind(onRoute),
+        _client: client,
+        todos: signal<Todo[]>([]),
         count: signal<number>(0),
         route: signal<string>(location.pathname + location.search)
     }
@@ -45,10 +64,18 @@ export function State ():{
     return state
 }
 
-export function Increase (state:ReturnType<typeof State>) {
+State.Increase = function Increase (state:Awaited<ReturnType<typeof State>>) {
     state.count.value++
 }
 
-export function Decrease (state:ReturnType<typeof State>) {
+State.Decrease = function Decrease (state:Awaited<ReturnType<typeof State>>) {
     state.count.value--
+}
+
+State.AddTodo = async function AddTodo (
+    state:Awaited<ReturnType<typeof State>>,
+    text:string
+) {
+    const client = state._client
+    await client.insert('todos', { text, completed: false })
 }

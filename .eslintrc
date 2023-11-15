@@ -8,6 +8,7 @@
   },
   "rules": {
     "operator-linebreak": ["off"],
+    "dot-notation": "off",
     "multiline-ternary": "off",
     "no-multiple-empty-lines": [
       "error",
