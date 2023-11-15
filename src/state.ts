@@ -20,7 +20,18 @@ export async function State ():Promise<{
     _client:InstanceType<typeof TriplitClient>
 }> {  // eslint-disable-line indent
     const onRoute = Route()
-    const client = new TriplitClient()
+
+    // memory
+    // https://www.triplit.dev/docs/client-database/storage#memory
+    // const client = new TriplitClient({
+    //     storage: 'memory',
+    // })
+
+    // inexedDB
+    // https://www.triplit.dev/docs/client-database/storage#indexeddb
+    const client = new TriplitClient({
+        storage: 'indexeddb',
+    })
 
     // Define a query
     // const completedTodosQuery = client
@@ -33,9 +44,9 @@ export async function State ():Promise<{
         .build()
 
     // Insert data
-    await client.insert('todos', { text: 'Buy milk', completed: true })
-    await client.insert('todos', { text: 'Buy eggs', completed: false })
-    await client.insert('todos', { text: 'Buy bread', completed: true })
+    // await client.insert('todos', { text: 'Buy milk', completed: true })
+    // await client.insert('todos', { text: 'Buy eggs', completed: false })
+    // await client.insert('todos', { text: 'Buy bread', completed: true })
 
     // Execute the query
     // const completedTodos = await client.fetch(completedTodosQuery)
