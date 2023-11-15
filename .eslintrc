@@ -10,6 +10,7 @@
     "operator-linebreak": ["off"],
     "dot-notation": "off",
     "multiline-ternary": "off",
+    "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral *"] }],
     "no-multiple-empty-lines": [
       "error",
       {
@@ -18,7 +19,6 @@
       }
     ],
     "no-undef": "off",
-    "indent": [ "error", 4 ],
     "comma-dangle": "off",
     "no-multi-spaces": ["error", { "ignoreEOLComments": true }]
   }

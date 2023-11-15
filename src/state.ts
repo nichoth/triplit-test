@@ -5,7 +5,7 @@ import Debug from '@nichoth/debug'
 
 const debug = Debug()
 
-type Todo = { text:string, completed:boolean }
+type Todo = { text:string, completed:boolean, id:string }
 
 /**
  * Setup state
@@ -15,6 +15,7 @@ type Todo = { text:string, completed:boolean }
 export async function State ():Promise<{
     route:Signal<string>;
     count:Signal<number>;
+    todos:Signal<Record<string, Todo>>
     _setRoute:(path:string)=>void;
     _client:InstanceType<typeof TriplitClient>
 }> {  // eslint-disable-line indent
@@ -22,9 +23,13 @@ export async function State ():Promise<{
     const client = new TriplitClient()
 
     // Define a query
-    const completedTodosQuery = client
+    // const completedTodosQuery = client
+    //     .query('todos')
+    //     .where('completed', '=', true)
+    //     .build()
+
+    const allTodosQuery = client
         .query('todos')
-        .where('completed', '=', true)
         .build()
 
     // Insert data
@@ -33,31 +38,33 @@ export async function State ():Promise<{
     await client.insert('todos', { text: 'Buy bread', completed: true })
 
     // Execute the query
-    const completedTodos = await client.fetch(completedTodosQuery)
-    debug('completed todos', completedTodos)
-
-    // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
-
-    // Subscribe to query result updates
-    client.subscribe(completedTodosQuery, (data) => {
-        // do something with data
-        debug('in subscription', data)
-    })
+    // const completedTodos = await client.fetch(completedTodosQuery)
 
     const state = {
         _setRoute: onRoute.setRoute.bind(onRoute),
         _client: client,
-        todos: signal<Todo[]>([]),
+        todos: signal<Record<string, Todo>>({}),
         count: signal<number>(0),
         route: signal<string>(location.pathname + location.search)
     }
+
+    // Subscribe to query result updates
+    // client.subscribe(completedTodosQuery, (data) => {
+    // // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
+    //     // do something with data
+    //     debug('in subscription', data)
+    // })
+
+    client.subscribe(allTodosQuery, data => {
+        debug('in subscription', Object.fromEntries(data))
+        state.todos.value = Object.fromEntries(data)
+    })
 
     /**
      * set the app state to match the browser URL
      */
     onRoute((path:string) => {
-        // for github pages
-        const newPath = path.replace('/template-ts-preact-htm/', '/')
+        const newPath = path.replace('/triplit-test/', '/')  // for github pages
         state.route.value = newPath
     })
 
@@ -78,4 +85,31 @@ State.AddTodo = async function AddTodo (
 ) {
     const client = state._client
     await client.insert('todos', { text, completed: false })
+}
+
+/**
+ * Mark an item as complete.
+ * @param {string} id The ID of the item you are updating
+ */
+State.Complete = async function Complete (
+    state:Awaited<ReturnType<typeof State>>,
+    id:string
+) {
+    const client = state._client
+
+    // await client.insert('todos', { text: 'Buy milk', completed: true })
+    await client.update('todos', id, (entity) => {
+        entity.completed = true
+    })
+}
+
+State.Uncomplete = async function (
+    state:Awaited<ReturnType<typeof State>>,
+    id:string
+) {
+    const client = state._client
+
+    await client.update('todos', id, entity => {
+        entity.completed = false
+    })
 }

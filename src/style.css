@@ -2,6 +2,17 @@ body {
     & div {
         margin-bottom: 1rem;
     }
+
+    /* The main part of the home page */
+    & form {
+        border: 1px solid;
+        padding: 1rem;
+    }
+}
+
+.route {
+    margin: 0 auto;
+    max-width: 40rem;
 }
 
 nav {
@@ -32,8 +43,4 @@ nav {
 
 button {
     cursor: pointer;
-
-    &:hover {
-        background: seashell;
-    }
 }

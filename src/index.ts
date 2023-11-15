@@ -66,7 +66,7 @@ export function Example () {
             </ul>
         </div>
 
-        <${ChildNode} />
+        <${ChildNode} state=${state} />
     </div>`
 }
 
@@ -78,4 +78,4 @@ function isActive (href) {
     return location.pathname === href
 }
 
-render(html`<${Example} />`, document.getElementById('root')!)
+render(html`<${Example} state=${state} />`, document.getElementById('root')!)
