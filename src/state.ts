@@ -1,40 +1,12 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
-import { Schema as S } from '@triplit/db'
+import { schema } from '../triplit/schema.js'
 import { TriplitClient } from '@triplit/client'
 import Debug from '@nichoth/debug'
 
 const debug = Debug()
 
 type Todo = { text:string, completed:boolean, id:string }
-
-/**
- * When you add this to the client contructor below,
- * it breaks intellisense in VSCode
- */
-const schema = {
-    todos: {
-        schema: S.Schema({
-            id: S.Id(),
-            text: S.String(),
-            complete: S.Boolean(),
-            created_at: S.Date(),
-            tags: S.Set(S.String()),
-        }),
-    },
-    users: {
-        schema: S.Schema({
-            id: S.Id(),
-            name: S.String(),
-            address: S.Record({
-                street: S.String(),
-                city: S.String(),
-                state: S.String(),
-                zip: S.String(),
-            }),
-        }),
-    },
-}
 
 /**
  * Setup state
@@ -67,6 +39,7 @@ export async function State ():Promise<{
     // indexedDB + cloud server
     // https://console.triplit.dev/?collectionName=my-collection
     const client = new TriplitClient({
+        schema,
         storage: 'indexeddb',
         serverUrl: 'https://dc14e3bd-f958-4842-876c-79b97de70db7.triplit.io',
         token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoiZGMxNGUzYmQtZjk1OC00ODQyLTg3NmMtNzliOTdkZTcwZGI3IiwiaWF0IjoxNzAwMDc1MTY2fQ.zR5Rz-1nERVjflEg42at5XYrawWNUxrAuQ64ETrCP-0'

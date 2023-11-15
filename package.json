@@ -9,7 +9,8 @@
     "test": "npm run lint && npm run build && npm run build-tests && npm run test-tape-run",
     "test-tape-run": "cat test/index.html | tape-run --input=html --static=test | tap-arc",
     "build": "mkdir -p ./public && rm -rf ./public/* && tsc --project tsconfig.build.json",
-    "start": "concurrently --kill-others \"npx triplit dev\" \"vite\"",
+    "start": "vite",
+    "start-local": "concurrently --kill-others \"npx triplit dev\" \"vite\"",
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run build"
