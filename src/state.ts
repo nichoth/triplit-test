@@ -1,5 +1,15 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
+import TriplitDB, { Schema as S, IndexedDBStorage } from '@triplit/db'
+
+const todoSchema = S.Schema({
+    todos: {
+        text: S.String(),
+        created_at: S.String(),
+        complete: S.Boolean(),
+        tags: S.Set(S.String())
+    }
+})
 
 /**
  * Setup any state
@@ -11,6 +21,11 @@ export function State ():{
     _setRoute:(path:string)=>void;
 } {  // eslint-disable-line indent
     const onRoute = Route()
+
+    const db = new TriplitDB({
+        schema: todoSchema,
+        source: new IndexedDBStorage('db-name'),
+    })
 
     const state = {
         _setRoute: onRoute.setRoute.bind(onRoute),
