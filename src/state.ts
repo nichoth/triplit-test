@@ -1,11 +1,40 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
+import { Schema as S } from '@triplit/db'
 import { TriplitClient } from '@triplit/client'
 import Debug from '@nichoth/debug'
 
 const debug = Debug()
 
 type Todo = { text:string, completed:boolean, id:string }
+
+/**
+ * When you add this to the client contructor below,
+ * it breaks intellisense in VSCode
+ */
+const schema = {
+    todos: {
+        schema: S.Schema({
+            id: S.Id(),
+            text: S.String(),
+            complete: S.Boolean(),
+            created_at: S.Date(),
+            tags: S.Set(S.String()),
+        }),
+    },
+    users: {
+        schema: S.Schema({
+            id: S.Id(),
+            name: S.String(),
+            address: S.Record({
+                street: S.String(),
+                city: S.String(),
+                state: S.String(),
+                zip: S.String(),
+            }),
+        }),
+    },
+}
 
 /**
  * Setup state
@@ -27,10 +56,20 @@ export async function State ():Promise<{
     //     storage: 'memory',
     // })
 
-    // inexedDB
+    // indexedDB + local serverside DB
     // https://www.triplit.dev/docs/client-database/storage#indexeddb
+    // const client = new TriplitClient({
+    //     storage: 'indexeddb',
+    //     serverUrl: 'http://localhost:6543',
+    //     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6ImFub24iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImxvY2FsLXByb2plY3QtaWQifQ.JzN7Erur8Y-MlFdCaZtovQwxN_m_fSyOIWNzYQ3uVcc'
+    // })
+
+    // indexedDB + cloud server
+    // https://console.triplit.dev/?collectionName=my-collection
     const client = new TriplitClient({
         storage: 'indexeddb',
+        serverUrl: 'https://dc14e3bd-f958-4842-876c-79b97de70db7.triplit.io',
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoiZGMxNGUzYmQtZjk1OC00ODQyLTg3NmMtNzliOTdkZTcwZGI3IiwiaWF0IjoxNzAwMDc1MTY2fQ.zR5Rz-1nERVjflEg42at5XYrawWNUxrAuQ64ETrCP-0'
     })
 
     // Define a query
@@ -43,11 +82,6 @@ export async function State ():Promise<{
         .query('todos')
         .build()
 
-    // Insert data
-    // await client.insert('todos', { text: 'Buy milk', completed: true })
-    // await client.insert('todos', { text: 'Buy eggs', completed: false })
-    // await client.insert('todos', { text: 'Buy bread', completed: true })
-
     // Execute the query
     // const completedTodos = await client.fetch(completedTodosQuery)
 
@@ -59,13 +93,7 @@ export async function State ():Promise<{
         route: signal<string>(location.pathname + location.search)
     }
 
-    // Subscribe to query result updates
-    // client.subscribe(completedTodosQuery, (data) => {
-    // // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
-    //     // do something with data
-    //     debug('in subscription', data)
-    // })
-
+    // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
     client.subscribe(allTodosQuery, data => {
         debug('in subscription', Object.fromEntries(data))
         state.todos.value = Object.fromEntries(data)

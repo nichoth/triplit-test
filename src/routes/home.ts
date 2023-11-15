@@ -44,7 +44,7 @@ export const HomeRoute:FunctionComponent<{
                 ${Object.keys(state.todos.value).map(k => {
                     const todo = state.todos.value[k]
                     return html`<li key=${todo.id}>
-                        <input defaultChecked=${todo.completed}
+                        <input checked=${todo.completed}
                             type="checkbox"
                             name="done-status"
                             data-id=${todo.id}
