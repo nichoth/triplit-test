@@ -1,9 +1,6 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
-import Debug from '@nichoth/debug'
 import { client } from './triplit.js'
-
-const debug = Debug()
 
 type Todo = { text: string, completed: boolean, id: string }
 
@@ -67,7 +64,6 @@ export async function State (): Promise<{
 
     // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
     client.subscribe(allTodosQuery, data => {
-        debug('in subscription', Object.fromEntries(data))
         state.todos.value = Object.fromEntries(data)
     })
 

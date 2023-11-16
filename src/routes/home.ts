@@ -2,16 +2,18 @@ import { html } from 'htm/preact'
 import { FunctionComponent } from 'preact'
 import { ReactiveForm } from '@nichoth/components/htm/reactive-form'
 import { TextInput } from '@nichoth/components/htm/text-input'
-// import Debug from '@nichoth/debug'
+import Debug from '@nichoth/debug'
 import { State } from '../state.js'
 import '@nichoth/components/text-input.css'
 import '@nichoth/components/button.css'
 
-// const debug = Debug()
+const debug = Debug()
 
 export const HomeRoute:FunctionComponent<{
     state:Awaited<ReturnType<typeof State>>
 }> = function HomeRoute ({ state }) {
+    debug('render home')
+
     function handleSubmit (ev) {
         ev.preventDefault()
 
@@ -19,8 +21,6 @@ export const HomeRoute:FunctionComponent<{
         const text = els['text'].value
 
         State.AddTodo(state, text)
-        // @ts-ignore
-        window.target = ev.target.elements['text']
 
         els['text'].value = ''
     }
@@ -63,7 +63,7 @@ export const HomeRoute:FunctionComponent<{
                     </li>`
                 })}
             </ul>` :
-            html`<em>none</em>`
+            html`<em class="empty-list">none</em>`
         }
 
         <${ReactiveForm} class="todo-create" onSubmit=${handleSubmit}>
