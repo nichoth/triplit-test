@@ -7,11 +7,57 @@ body {
 
 }
 
-.toggle:checked+label {
-    background-image: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%2359A193%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20fill%3D%22%233EA390%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22%2F%3E%3C%2Fsvg%3E);
+input[type="checkbox"] {
+    cursor: pointer;
 }
 
-/* The main todo input of the home page */
+.todo-list {
+    padding: 0;
+    list-style: none;
+    font-size: 24px;
+
+    & li {
+        border-bottom: 1px solid #3c3c3c;
+    }
+
+    & label {
+        word-break: break-all;
+        padding: 15px 15px 15px 60px;
+        display: block;
+        line-height: 1.2;
+        transition: color .4s;
+        font-weight: 400;
+        color: #484848;
+    }
+}
+
+.toggle {
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    margin: auto 0;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &+label {
+        background-image: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23949494%22%20stroke-width%3D%223%22/%3E%3C/svg%3E);
+        background-repeat: no-repeat;
+        background-position: 0;
+    }
+}
+
+.todo {
+    & .toggle{
+        &:checked+label {
+            background-image: url(data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%2359A193%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20fill%3D%22%233EA390%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22%2F%3E%3C%2Fsvg%3E);
+        }
+    }
+}
+
+/* The main todo form on the home page */
 .todo-create {
     border: 1px solid;
     padding: 1rem;
@@ -57,5 +103,6 @@ button {
 .input-group {
     &.text {
         margin-bottom: 1rem;
+        margin-top: 1.5rem;
     }
 }

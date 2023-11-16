@@ -1,9 +1,5 @@
 import { html } from 'htm/preact'
 import { render } from 'preact'
-import {
-    Primary as ButtonOutlinePrimary,
-    ButtonOutline
-} from '@nichoth/components/htm/button-outline'
 import { createDebug } from '@nichoth/debug'
 import { State } from './state.js'
 import Router from './routes/index.js'
@@ -26,16 +22,6 @@ export function Example () {
 
     const ChildNode = match.action(match, state.route)
 
-    function plus (ev) {
-        ev.preventDefault()
-        State.Increase(state)
-    }
-
-    function minus (ev) {
-        ev.preventDefault()
-        State.Decrease(state)
-    }
-
     return html`<div class="content">
         <h1>hello</h1>
 
@@ -48,23 +34,6 @@ export function Example () {
                 </ul>
             </nav>
         </header>
-
-        <div>
-            <div>count: ${state.count.value}</div>
-
-            <ul class="count-controls">
-                <li>
-                    <${ButtonOutlinePrimary} onClick=${plus}>
-                        plus
-                    </${ButtonOutline}>
-                </li>
-                <li>
-                    <${ButtonOutline} onClick=${minus}>
-                        minus
-                    </${ButtonOutline}>
-                </li>
-            </ul>
-        </div>
 
         <${ChildNode} state=${state} />
     </div>`

@@ -46,17 +46,20 @@ export const HomeRoute:FunctionComponent<{
                     const classes = todo.completed ? 'todo complete' : 'todo'
 
                     return html`<li key=${todo.id} class=${classes}>
-                        <input checked=${todo.completed}
+                        <input class="toggle" checked=${todo.completed}
                             type="checkbox"
                             name="done-status"
+                            id="${todo.id}"
                             data-id=${todo.id}
                             onChange=${check}
                         />
 
-                        ${todo.completed ?
-                            html`<s>${todo.text}</s>` :
-                            html`<span>${todo.text}</span>`
-                        }
+                        <label>
+                            ${todo.completed ?
+                                html`<s>${todo.text}</s>` :
+                                html`<span>${todo.text}</span>`
+                            }
+                        </label>
                     </li>`
                 })}
             </ul>` :

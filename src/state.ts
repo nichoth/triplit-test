@@ -2,7 +2,6 @@ import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
 import Debug from '@nichoth/debug'
 import { client } from './triplit.js'
-import ts from 'monotonic-timestamp'
 
 const debug = Debug()
 
@@ -96,7 +95,11 @@ State.AddTodo = async function AddTodo (
     text: string
 ) {
     const client = state._client
-    await client.insert('todos', { created_at: ts(), text, completed: false })
+    await client.insert('todos', {
+        created_at: new Date(),
+        text,
+        completed: false
+    })
 }
 
 /**
