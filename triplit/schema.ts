@@ -1,4 +1,4 @@
-import { Schema as S } from '@triplit/db'
+import { Models, Schema as S } from '@triplit/db'
 
 /**
  * When you add this to the client contructor below,
@@ -9,7 +9,7 @@ export const schema = {
         schema: S.Schema({
             id: S.Id(),
             text: S.String(),
-            complete: S.Boolean(),
+            completed: S.Boolean(),
             created_at: S.Date(),
             tags: S.Set(S.String()),
         }),
@@ -26,4 +26,4 @@ export const schema = {
             }),
         }),
     },
-}
+} satisfies Models<any, any>;

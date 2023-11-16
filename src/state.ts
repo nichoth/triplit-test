@@ -1,24 +1,23 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
-import { schema } from '../triplit/schema.js'
-import { TriplitClient } from '@triplit/client'
 import Debug from '@nichoth/debug'
+import { client } from "./triplit"
 
 const debug = Debug()
 
-type Todo = { text:string, completed:boolean, id:string }
+type Todo = { text: string, completed: boolean, id: string }
 
 /**
  * Setup state
  *   - routes
  *   - create DB instance
  */
-export async function State ():Promise<{
-    route:Signal<string>;
-    count:Signal<number>;
-    todos:Signal<Record<string, Todo>>
-    _setRoute:(path:string)=>void;
-    _client:InstanceType<typeof TriplitClient>
+export async function State(): Promise<{
+    route: Signal<string>;
+    count: Signal<number>;
+    todos: Signal<Record<string, Todo>>
+    _setRoute: (path: string) => void;
+    _client: typeof client;
 }> {  // eslint-disable-line indent
     const onRoute = Route()
 
@@ -38,12 +37,12 @@ export async function State ():Promise<{
 
     // indexedDB + cloud server
     // https://console.triplit.dev/?collectionName=my-collection
-    const client = new TriplitClient({
-        schema,
-        storage: 'indexeddb',
-        serverUrl: 'https://dc14e3bd-f958-4842-876c-79b97de70db7.triplit.io',
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoiZGMxNGUzYmQtZjk1OC00ODQyLTg3NmMtNzliOTdkZTcwZGI3IiwiaWF0IjoxNzAwMDc1MTY2fQ.zR5Rz-1nERVjflEg42at5XYrawWNUxrAuQ64ETrCP-0'
-    })
+    // const client = new TriplitClient({
+    //     schema,
+    //     storage: 'indexeddb',
+    //     serverUrl: 'https://dc14e3bd-f958-4842-876c-79b97de70db7.triplit.io',
+    //     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoiZGMxNGUzYmQtZjk1OC00ODQyLTg3NmMtNzliOTdkZTcwZGI3IiwiaWF0IjoxNzAwMDc1MTY2fQ.zR5Rz-1nERVjflEg42at5XYrawWNUxrAuQ64ETrCP-0'
+    // })
 
     // Define a query
     // const completedTodosQuery = client
@@ -75,7 +74,7 @@ export async function State ():Promise<{
     /**
      * set the app state to match the browser URL
      */
-    onRoute((path:string) => {
+    onRoute((path: string) => {
         const newPath = path.replace('/triplit-test/', '/')  // for github pages
         state.route.value = newPath
     })
@@ -83,17 +82,17 @@ export async function State ():Promise<{
     return state
 }
 
-State.Increase = function Increase (state:Awaited<ReturnType<typeof State>>) {
+State.Increase = function Increase(state: Awaited<ReturnType<typeof State>>) {
     state.count.value++
 }
 
-State.Decrease = function Decrease (state:Awaited<ReturnType<typeof State>>) {
+State.Decrease = function Decrease(state: Awaited<ReturnType<typeof State>>) {
     state.count.value--
 }
 
-State.AddTodo = async function AddTodo (
-    state:Awaited<ReturnType<typeof State>>,
-    text:string
+State.AddTodo = async function AddTodo(
+    state: Awaited<ReturnType<typeof State>>,
+    text: string
 ) {
     const client = state._client
     await client.insert('todos', { text, completed: false })
@@ -103,9 +102,9 @@ State.AddTodo = async function AddTodo (
  * Mark an item as complete.
  * @param {string} id The ID of the item you are updating
  */
-State.Complete = async function Complete (
-    state:Awaited<ReturnType<typeof State>>,
-    id:string
+State.Complete = async function Complete(
+    state: Awaited<ReturnType<typeof State>>,
+    id: string
 ) {
     const client = state._client
 
@@ -116,8 +115,8 @@ State.Complete = async function Complete (
 }
 
 State.Uncomplete = async function (
-    state:Awaited<ReturnType<typeof State>>,
-    id:string
+    state: Awaited<ReturnType<typeof State>>,
+    id: string
 ) {
     const client = state._client
 
