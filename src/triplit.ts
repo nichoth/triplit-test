@@ -1,6 +1,6 @@
-import { TriplitClient, Schema as S } from "@triplit/client";
-import { schema } from '../triplit/schema';
+import { TriplitClient } from '@triplit/client'
+import { schema } from '../triplit/schema.js'
 
 export const client = new TriplitClient({
     schema
-});
+})

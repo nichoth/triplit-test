@@ -1,7 +1,8 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
 import Debug from '@nichoth/debug'
-import { client } from "./triplit"
+import { client } from './triplit.js'
+import ts from 'monotonic-timestamp'
 
 const debug = Debug()
 
@@ -12,7 +13,7 @@ type Todo = { text: string, completed: boolean, id: string }
  *   - routes
  *   - create DB instance
  */
-export async function State(): Promise<{
+export async function State (): Promise<{
     route: Signal<string>;
     count: Signal<number>;
     todos: Signal<Record<string, Todo>>
@@ -82,27 +83,27 @@ export async function State(): Promise<{
     return state
 }
 
-State.Increase = function Increase(state: Awaited<ReturnType<typeof State>>) {
+State.Increase = function Increase (state: Awaited<ReturnType<typeof State>>) {
     state.count.value++
 }
 
-State.Decrease = function Decrease(state: Awaited<ReturnType<typeof State>>) {
+State.Decrease = function Decrease (state: Awaited<ReturnType<typeof State>>) {
     state.count.value--
 }
 
-State.AddTodo = async function AddTodo(
+State.AddTodo = async function AddTodo (
     state: Awaited<ReturnType<typeof State>>,
     text: string
 ) {
     const client = state._client
-    await client.insert('todos', { text, completed: false })
+    await client.insert('todos', { created_at: ts(), text, completed: false })
 }
 
 /**
  * Mark an item as complete.
  * @param {string} id The ID of the item you are updating
  */
-State.Complete = async function Complete(
+State.Complete = async function Complete (
     state: Awaited<ReturnType<typeof State>>,
     id: string
 ) {

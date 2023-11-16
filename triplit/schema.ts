@@ -1,9 +1,5 @@
 import { Models, Schema as S } from '@triplit/db'
 
-/**
- * When you add this to the client contructor below,
- * it breaks intellisense in VSCode
- */
 export const schema = {
     todos: {
         schema: S.Schema({
@@ -26,4 +22,4 @@ export const schema = {
             }),
         }),
     },
-} satisfies Models<any, any>;
+} satisfies Models<any, any>

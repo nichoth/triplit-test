@@ -40,10 +40,12 @@ export const HomeRoute:FunctionComponent<{
     return html`<div class="route home">
         <h2>The list</h2>
         ${Object.keys(state.todos.value).length ?
-            html`<ul>
+            html`<ul class="todo-list">
                 ${Object.keys(state.todos.value).map(k => {
                     const todo = state.todos.value[k]
-                    return html`<li key=${todo.id}>
+                    const classes = todo.completed ? 'todo complete' : 'todo'
+
+                    return html`<li key=${todo.id} class=${classes}>
                         <input checked=${todo.completed}
                             type="checkbox"
                             name="done-status"
@@ -58,10 +60,10 @@ export const HomeRoute:FunctionComponent<{
                     </li>`
                 })}
             </ul>` :
-            null
+            html`<em>none</em>`
         }
 
-        <${ReactiveForm} onSubmit=${handleSubmit}>
+        <${ReactiveForm} class="todo-create" onSubmit=${handleSubmit}>
             <h2>Create a todo item</h2>
             <${TextInput} name="text" displayName="Something to do"
                 required=${true} />
