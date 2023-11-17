@@ -8,3 +8,9 @@ Trying [triplit](https://www.triplit.dev/)
 
 -------
 
+## develop
+Start a localhost triplit server and frontend server
+
+```sh
+npm run start-local
+```
