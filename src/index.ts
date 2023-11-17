@@ -5,6 +5,7 @@ import { State } from './state.js'
 import Router from './routes/index.js'
 import '@nichoth/components/button-outline.css'
 import './style.css'
+import './z-index.css'
 
 const router = Router()
 const state = await State()

@@ -1,6 +1,9 @@
 import { Signal, signal } from '@preact/signals'
 import Route from 'route-event'
 import { client } from './triplit.js'
+import Debug from '@nichoth/debug'
+
+const debug = Debug()
 
 type Todo = { text: string, completed: boolean, id: string }
 
@@ -102,7 +105,7 @@ State.AddTodo = async function AddTodo (
  * Mark an item as complete.
  * @param {string} id The ID of the item you are updating
  */
-State.Complete = async function Complete (
+State.Complete = async function (
     state: Awaited<ReturnType<typeof State>>,
     id: string
 ) {
@@ -119,6 +122,8 @@ State.Uncomplete = async function (
     id: string
 ) {
     const client = state._client
+
+    debug('uncomplete', id)
 
     await client.update('todos', id, entity => {
         entity.completed = false

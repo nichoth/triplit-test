@@ -1,0 +1,9 @@
+.todo {
+    & input {
+        z-index: 200;
+    }
+
+    & label {
+        z-index: 100;
+    }
+}
