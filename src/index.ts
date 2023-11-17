@@ -40,10 +40,6 @@ export function Example () {
 }
 
 function getClass (href) {
-    return isActive(href) ? 'active' : ''
-}
-
-function isActive (href) {
     return location.pathname === href
 }
 
