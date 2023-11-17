@@ -13,21 +13,34 @@ input[type="checkbox"] {
 
 .todo-list {
     padding: 0;
+    border: 1px solid;
     list-style: none;
     font-size: 24px;
+}
 
-    & li {
-        border-bottom: 1px solid #3c3c3c;
+.todo {
+    border-bottom: 1px solid #3c3c3c;
+
+    &:last-child {
+        border-bottom: none;
     }
 
     & label {
+        transition: opacity 0.4s;
         word-break: break-all;
         padding: 15px 15px 15px 60px;
         display: block;
         line-height: 1.2;
-        transition: color .4s;
         font-weight: 400;
         color: #484848;
+    }
+
+    &.complete {
+        & label {
+            text-decoration: line-through;
+            /* color: #949494; */
+            opacity: 0.6;
+        }
     }
 }
 

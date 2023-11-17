@@ -55,10 +55,7 @@ export const HomeRoute:FunctionComponent<{
                         />
 
                         <label>
-                            ${todo.completed ?
-                                html`<s>${todo.text}</s>` :
-                                html`<span>${todo.text}</span>`
-                            }
+                            ${todo.text}
                         </label>
                     </li>`
                 })}
