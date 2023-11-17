@@ -81,14 +81,6 @@ export async function State (): Promise<{
     return state
 }
 
-State.Increase = function Increase (state: Awaited<ReturnType<typeof State>>) {
-    state.count.value++
-}
-
-State.Decrease = function Decrease (state: Awaited<ReturnType<typeof State>>) {
-    state.count.value--
-}
-
 State.AddTodo = async function AddTodo (
     state: Awaited<ReturnType<typeof State>>,
     text: string
@@ -103,6 +95,7 @@ State.AddTodo = async function AddTodo (
 
 /**
  * Mark an item as complete.
+ * @param {Awaited<ReturnType<typeof State>>} state
  * @param {string} id The ID of the item you are updating
  */
 State.Complete = async function (
@@ -111,12 +104,16 @@ State.Complete = async function (
 ) {
     const client = state._client
 
-    // await client.insert('todos', { text: 'Buy milk', completed: true })
     await client.update('todos', id, (entity) => {
         entity.completed = true
     })
 }
 
+/**
+ * Mark an item an not complete. (Uncheck an item)
+ * @param state The state object
+ * @param id The id of the todo object
+ */
 State.Uncomplete = async function (
     state: Awaited<ReturnType<typeof State>>,
     id: string

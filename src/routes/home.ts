@@ -43,7 +43,7 @@ export const HomeRoute:FunctionComponent<{
             html`<ul class="todo-list">
                 ${Object.keys(state.todos.value).map(k => {
                     const todo = state.todos.value[k]
-                    const classes = todo.completed ? 'todo complete' : 'todo'
+                    const classes = todo.completed ? 'todo completed' : 'todo'
 
                     return html`<li key=${todo.id} class=${classes}>
                         <input class="toggle" checked=${todo.completed}
