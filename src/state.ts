@@ -21,29 +21,6 @@ export async function State (): Promise<{
 }> {  // eslint-disable-line indent
     const onRoute = Route()
 
-    // memory
-    // https://www.triplit.dev/docs/client-database/storage#memory
-    // const client = new TriplitClient({
-    //     storage: 'memory',
-    // })
-
-    // indexedDB + local serverside DB
-    // https://www.triplit.dev/docs/client-database/storage#indexeddb
-    // const client = new TriplitClient({
-    //     storage: 'indexeddb',
-    //     serverUrl: 'http://localhost:6543',
-    //     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6ImFub24iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImxvY2FsLXByb2plY3QtaWQifQ.JzN7Erur8Y-MlFdCaZtovQwxN_m_fSyOIWNzYQ3uVcc'
-    // })
-
-    // indexedDB + cloud server
-    // https://console.triplit.dev/?collectionName=my-collection
-    // const client = new TriplitClient({
-    //     schema,
-    //     storage: 'indexeddb',
-    //     serverUrl: 'https://dc14e3bd-f958-4842-876c-79b97de70db7.triplit.io',
-    //     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdG9rZW4tdHlwZSI6InNlY3JldCIsIngtdHJpcGxpdC1wcm9qZWN0LWlkIjoiZGMxNGUzYmQtZjk1OC00ODQyLTg3NmMtNzliOTdkZTcwZGI3IiwiaWF0IjoxNzAwMDc1MTY2fQ.zR5Rz-1nERVjflEg42at5XYrawWNUxrAuQ64ETrCP-0'
-    // })
-
     // Define a query
     // const completedTodosQuery = client
     //     .query('todos')
@@ -65,6 +42,10 @@ export async function State (): Promise<{
         route: signal<string>(location.pathname + location.search)
     }
 
+    const todos = await client.fetch(allTodosQuery)
+    debug('todos', todos)
+    state.todos.value = Object.entries(todos)
+
     // const unsubscribe = client.subscribe(completedTodosQuery, (data) => {
     client.subscribe(allTodosQuery, data => {
         state.todos.value = Object.fromEntries(data)
@@ -81,14 +62,6 @@ export async function State (): Promise<{
     return state
 }
 
-State.Increase = function Increase (state: Awaited<ReturnType<typeof State>>) {
-    state.count.value++
-}
-
-State.Decrease = function Decrease (state: Awaited<ReturnType<typeof State>>) {
-    state.count.value--
-}
-
 State.AddTodo = async function AddTodo (
     state: Awaited<ReturnType<typeof State>>,
     text: string
@@ -103,6 +76,7 @@ State.AddTodo = async function AddTodo (
 
 /**
  * Mark an item as complete.
+ * @param {Awaited<ReturnType<typeof State>>} state
  * @param {string} id The ID of the item you are updating
  */
 State.Complete = async function (
@@ -111,12 +85,16 @@ State.Complete = async function (
 ) {
     const client = state._client
 
-    // await client.insert('todos', { text: 'Buy milk', completed: true })
     await client.update('todos', id, (entity) => {
         entity.completed = true
     })
 }
 
+/**
+ * Mark an item an not complete. (Uncheck an item)
+ * @param state The state object
+ * @param id The id of the todo object
+ */
 State.Uncomplete = async function (
     state: Awaited<ReturnType<typeof State>>,
     id: string

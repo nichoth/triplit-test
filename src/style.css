@@ -35,7 +35,7 @@ input[type="checkbox"] {
         color: #484848;
     }
 
-    &.complete {
+    &.completed {
         & label {
             text-decoration: line-through;
             color: #4848489c;
