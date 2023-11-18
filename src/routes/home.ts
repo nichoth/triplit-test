@@ -9,6 +9,9 @@ import '@nichoth/components/button.css'
 
 const debug = Debug()
 
+/**
+ * The todo list
+ */
 export const HomeRoute:FunctionComponent<{
     state:Awaited<ReturnType<typeof State>>
 }> = function HomeRoute ({ state }) {
